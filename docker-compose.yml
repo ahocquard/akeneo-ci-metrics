@@ -1,0 +1,24 @@
+version: '3.2'
+
+services:
+    influxdb:
+        image: influxdb:1.2-alpine
+        volumes:
+            - influxdb:/var/lib/influxdb
+
+    chronograf:
+        image: chronograf:1.3-alpine
+        volumes:
+            - chronograf:/var/lib/chronograf
+        environment:
+            INFLUXDB_URL: http://influxdb:8086
+        ports:
+            - '8888:8888'
+
+volumes:
+    influxdb: ~
+    chronograf: ~
+
+networks:
+    default:
+        attachable: true
