@@ -11,17 +11,15 @@ namespace App\Model\Jenkins\Job;
  */
 class JobName
 {
+    /** @var string */
     private $name;
 
-    /**
-     * @param $name
-     */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
     }
 
-    public function value()
+    public function value(): string
     {
         return $this->name;
     }

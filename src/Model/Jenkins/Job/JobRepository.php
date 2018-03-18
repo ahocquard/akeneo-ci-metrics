@@ -12,7 +12,7 @@ namespace App\Model\Jenkins\Job;
 interface JobRepository
 {
     /**
-     * @return array
+     * @return Job[]
      */
     public function listJobs(): array;
 }

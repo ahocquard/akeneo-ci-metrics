@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Model\Jenkins\Job;
 
+use App\Model\Jenkins\PullRequest\PullRequestUri;
+
 /**
  * A job in Jenkins represents a repository on Github.
+ * A job is linked to several pull requests.
  *
  * @author    Alexandre Hocquard <alexandre.hocquard@akeneo.com>
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
@@ -14,23 +17,24 @@ namespace App\Model\Jenkins\Job;
 class Job
 {
     /** @var JobName */
-    private $name;
+    private $fullName;
 
-    /** @var array */
+    /** @var PullRequestUri[] */
     private $pullRequestUris;
 
-    /**
-     * @param JobName $name
-     * @param array   $pullRequestUris
-     */
-    public function __construct(JobName $name, array $pullRequestUris)
+    public function __construct(JobName $fullName, array $pullRequestUris)
     {
-        $this->name = $name;
+        $this->fullName = $fullName;
         $this->pullRequestUris = $pullRequestUris;
     }
 
-    public function name()
+    public function fullName(): JobName
     {
-        return $this->name;
+        return $this->fullName;
+    }
+
+    public function pullRequestUris(): array
+    {
+        return $this->pullRequestUris;
     }
 }

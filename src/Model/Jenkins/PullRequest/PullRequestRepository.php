@@ -13,5 +13,10 @@ use App\Model\Jenkins\Job\Job;
  */
 interface PullRequestRepository
 {
+    /**
+     * @param Job $job
+     *
+     * @return PullRequest[]
+     */
     public function listPullRequestsFrom(Job $job): array;
 }
