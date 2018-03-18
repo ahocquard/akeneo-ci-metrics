@@ -13,26 +13,23 @@ use App\Model\Jenkins\Build\BuildUri;
 use App\Model\Jenkins\Job\Job;
 use App\Model\Jenkins\Job\JobName;
 use App\Model\Jenkins\Job\JobRepository;
+use App\Model\Jenkins\Pipeline\PipelineName;
 use App\Model\Jenkins\PullRequest\PullRequest;
 use App\Model\Jenkins\PullRequest\PullRequestRepository;
 use App\Model\Jenkins\PullRequest\PullRequestUri;
+use App\Model\Jenkins\Run\ListableRunRepository;
+use App\Model\Jenkins\Run\Run;
+use App\Model\Jenkins\Run\SaveableRunRepository;
 use PhpSpec\ObjectBehavior;
 
 class ImportContinuousIntegrationMetricsHandlerSpec extends ObjectBehavior
 {
 
     function let(
-        JobRepository $jobRepository,
-        PullRequestRepository $pullRequestRepository,
-        ListableBuildRepository $sourceBuildRepository,
-        SaveableBuildRepository $targetBuildRepository
+        ListableRunRepository $listableRunRepository,
+        SaveableRunRepository $saveableRunRepository
     ) {
-        $this->beConstructedWith(
-            $jobRepository,
-            $pullRequestRepository,
-            $sourceBuildRepository,
-            $targetBuildRepository
-        );
+        $this->beConstructedWith($listableRunRepository, $saveableRunRepository);
     }
 
     function it_is_initializable()
@@ -41,232 +38,81 @@ class ImportContinuousIntegrationMetricsHandlerSpec extends ObjectBehavior
     }
 
     function it_imports_build_metrics(
-        $jobRepository,
-        $pullRequestRepository,
-        $sourceBuildRepository,
-        $targetBuildRepository
+        $listableRunRepository,
+        $saveableRunRepository,
+        Run $ceRun1,
+        Run $ceRun2,
+        Run $eeRun1
     ) {
         $command = new ImportContinuousIntegrationMetrics();
-        $command->jobNames = [new JobName('akeneo/pim-community-dev'), new JobName('akeneo/pim-enterprise-dev')];
+        $cePipelineName = new PipelineName('pim-community-dev');
+        $eePipelineName = new PipelineName('pim-enterprise-dev');
+        $command->pipelineNames = [$cePipelineName, $eePipelineName];
 
-        $ce = new Job(
-            new JobName('akeneo/pim-community-dev'),
-            [
-                new PullRequestUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1000/api/json'),
-                new PullRequestUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1001/api/json'),
-            ]
-        );
+        $listableRunRepository->listRunsFrom($cePipelineName)->willReturn([$ceRun1, $ceRun2]);
+        $listableRunRepository->listRunsFrom($eePipelineName)->willReturn([$eeRun1]);
 
-        $ce_PR_1 = new PullRequest(
-            'PR-1000',
-            [
-                new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1000/1/api/json'),
-                new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1000/2/api/json'),
-            ]
-        );
+        $ceRun1->isRunFinished()->willReturn(true);
+        $ceRun2->isRunFinished()->willReturn(true);
+        $eeRun1->isRunFinished()->willReturn(true);
 
-        $ce_PR_2 = new PullRequest(
-            'PR-1001',
-            [
-                new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1001/1/api/json'),
-            ]
-        );
+        $saveableRunRepository->hasRun($ceRun1)->willReturn(false);
+        $saveableRunRepository->hasRun($ceRun2)->willReturn(false);
+        $saveableRunRepository->hasRun($eeRun1)->willReturn(false);
 
-        $ce_PR_1_build_1 = new Build(
-            $ce_PR_1,
-            new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1000/1/api/json'),
-            'ce_pr_1_build_1',
-            'SUCCESS',
-            '{}',
-            1,
-            100,
-            new \DateTime('now'),
-            0,
-            0,
-            10
-        );
-
-        $ce_PR_1_build_2 = new Build(
-            $ce_PR_1,
-            new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1000/2/api/json'),
-            'ce_pr_1_build_2',
-            'FAILURE',
-            '{}',
-            1,
-            100,
-            new \DateTime('now'),
-            1,
-            0,
-            9
-        );
-
-        $ce_PR_2_build_1 = new Build(
-            $ce_PR_1,
-            new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1001/1/api/json'),
-            'ce_pr_2_build_1',
-            'SUCCESS',
-            '{}',
-            1,
-            100,
-            new \DateTime('now'),
-            0,
-            0,
-            10
-        );
-
-        $ee = new Job(
-            new JobName('akeneo/pim-enterprise-dev'),
-            [
-                new PullRequestUri('https://ci.akeneo.com/job/akeneo/job/pim-enterprise-dev/job/PR-2000/api/json'),
-            ]
-        );
-
-        $ee_PR_1 = new PullRequest(
-            'PR-2000',
-            [
-                new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-2000/1/api/json'),
-            ]
-        );
-
-        $ee_PR_1_build_1 = new Build(
-            $ee_PR_1,
-            new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-enterprise-dev/job/PR-2000/1/api/json'),
-            'ee_pr_1_build_1',
-            'SUCCESS',
-            '{}',
-            1,
-            100,
-            new \DateTime('now'),
-            0,
-            0,
-            10
-        );
-
-        $other = new Job(
-            new JobName('other'),
-            [
-                new PullRequestUri('https://ci.akeneo.com/job/akeneo/job/other/job/PR-3000/api/json'),
-            ]
-        );
-
-        $jobRepository->listJobs()->willReturn([$other, $ce, $ee]);
-
-        $pullRequestRepository->listPullRequestsFrom($ce)->willReturn([$ce_PR_1, $ce_PR_2]);
-        $pullRequestRepository->listPullRequestsFrom($ee)->willReturn([$ee_PR_1]);
-        $pullRequestRepository->listPullRequestsFrom($other)->shouldNotBeCalled();
-
-        $sourceBuildRepository->listBuildsFrom($ce_PR_1)->willReturn([$ce_PR_1_build_1, $ce_PR_1_build_2]);
-        $sourceBuildRepository->listBuildsFrom($ce_PR_2)->willReturn([$ce_PR_2_build_1]);
-        $sourceBuildRepository->listBuildsFrom($ee_PR_1)->willReturn([$ee_PR_1_build_1]);
-
-        $targetBuildRepository->hasBuild($ce_PR_1_build_1)->willReturn(false);
-        $targetBuildRepository->hasBuild($ce_PR_1_build_2)->willReturn(false);
-        $targetBuildRepository->hasBuild($ce_PR_2_build_1)->willReturn(false);
-        $targetBuildRepository->hasBuild($ee_PR_1_build_1)->willReturn(false);
-
-        $targetBuildRepository
-            ->saveBuilds([$ce_PR_1_build_1, $ce_PR_1_build_2, $ce_PR_2_build_1, $ee_PR_1_build_1])
+        $saveableRunRepository
+            ->saveRuns([$ceRun1, $ceRun2, $eeRun1])
             ->shouldBeCalled();
 
         $this->handle($command);
     }
 
     function it_does_not_imports_metrics_from_running_build(
-        $jobRepository,
-        $pullRequestRepository,
-        $sourceBuildRepository,
-        $targetBuildRepository
+        $listableRunRepository,
+        $saveableRunRepository,
+        Run $ceRun1,
+        Run $ceRun2
     ) {
         $command = new ImportContinuousIntegrationMetrics();
-        $command->jobNames = [new JobName('akeneo/pim-community-dev')];
+        $cePipelineName = new PipelineName('pim-community-dev');
+        $command->pipelineNames = [$cePipelineName];
 
-        $ce = new Job(
-            new JobName('pim-community-dev'),
-            [
-                new PullRequestUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1000/api/json'),
-            ]
-        );
+        $listableRunRepository->listRunsFrom($cePipelineName)->willReturn([$ceRun1, $ceRun2]);
 
-        $ce_PR_1 = new PullRequest(
-            'PR-1000',
-            [
-                new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1000/1/api/json'),
-            ]
-        );
+        $ceRun1->isRunFinished()->willReturn(true);
+        $ceRun2->isRunFinished()->willReturn(false);
 
-        $ce_PR_1_build_1 = new Build(
-            $ce_PR_1,
-            new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1000/1/api/json'),
-            'ce_pr_1_build_1',
-            null,
-            '{}',
-            1,
-            100,
-            new \DateTime('now'),
-            -1,
-            -1,
-            -1
-        );
+        $saveableRunRepository->hasRun($ceRun1)->willReturn(false);
+        $saveableRunRepository->hasRun($ceRun2)->willReturn(false);
 
-        $jobRepository->listJobs()->willReturn([$ce]);
-
-        $pullRequestRepository->listPullRequestsFrom($ce)->willReturn([$ce_PR_1]);
-
-        $sourceBuildRepository->listBuildsFrom($ce_PR_1)->willReturn([$ce_PR_1_build_1]);
-
-        $targetBuildRepository->hasBuild($ce_PR_1_build_1)->willReturn(false);
-
-        $targetBuildRepository->saveBuilds([])->shouldBeCalled();
+        $saveableRunRepository
+            ->saveRuns([$ceRun1])
+            ->shouldBeCalled();
 
         $this->handle($command);
     }
 
     function it_does_not_imports_already_imported_build_metrics(
-        $jobRepository,
-        $pullRequestRepository,
-        $sourceBuildRepository,
-        $targetBuildRepository
+        $listableRunRepository,
+        $saveableRunRepository,
+        Run $ceRun1,
+        Run $ceRun2
     ) {
         $command = new ImportContinuousIntegrationMetrics();
-        $command->jobNames = [new JobName('pim-community-dev')];
+        $cePipelineName = new PipelineName('pim-community-dev');
+        $command->pipelineNames = [$cePipelineName];
 
-        $ce = new Job(
-            new JobName('pim-community-dev'),
-            [
-                new PullRequestUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1000/api/json'),
-            ]
-        );
+        $listableRunRepository->listRunsFrom($cePipelineName)->willReturn([$ceRun1, $ceRun2]);
 
-        $ce_PR_1 = new PullRequest(
-            'PR-1000',
-            [
-                new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1000/1/api/json'),
-            ]
-        );
+        $ceRun1->isRunFinished()->willReturn(true);
+        $ceRun2->isRunFinished()->willReturn(true);
 
-        $ce_PR_1_build_1 = new Build(
-            $ce_PR_1,
-            new BuildUri('https://ci.akeneo.com/job/akeneo/job/pim-community-dev/job/PR-1000/1/api/json'),
-            'ce_pr_1_build_1',
-            'SUCCESS',
-            '{}',
-            1,
-            100,
-            new \DateTime('now'),
-            0,
-            0,
-            10
-        );
+        $saveableRunRepository->hasRun($ceRun1)->willReturn(false);
+        $saveableRunRepository->hasRun($ceRun2)->willReturn(true);
 
-        $jobRepository->listJobs()->willReturn([$ce]);
-
-        $pullRequestRepository->listPullRequestsFrom($ce)->willReturn([$ce_PR_1]);
-
-        $sourceBuildRepository->listBuildsFrom($ce_PR_1)->willReturn([$ce_PR_1_build_1]);
-
-        $targetBuildRepository->hasBuild($ce_PR_1_build_1)->willReturn(true);
-
-        $targetBuildRepository->saveBuilds([])->shouldBeCalled();
+        $saveableRunRepository
+            ->saveRuns([$ceRun1])
+            ->shouldBeCalled();
 
         $this->handle($command);
     }

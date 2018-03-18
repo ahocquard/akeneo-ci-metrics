@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application;
 
 use App\Model\Jenkins\Job\JobName;
+use App\Model\Jenkins\Job\PipelineName;
 
 /**
  * @author    Alexandre Hocquard <alexandre.hocquard@akeneo.com>
@@ -13,6 +14,6 @@ use App\Model\Jenkins\Job\JobName;
  */
 class ImportContinuousIntegrationMetrics
 {
-    /** @var JobName */
-    public $jobNames;
+    /** @var PipelineName[] */
+    public $pipelineNames;
 }

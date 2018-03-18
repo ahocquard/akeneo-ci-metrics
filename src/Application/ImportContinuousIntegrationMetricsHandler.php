@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application;
 
-use App\Model\Jenkins\Build\ListableBuildRepository;
-use App\Model\Jenkins\Build\SaveableBuildRepository;
 use App\Model\Jenkins\Job\Job;
-use App\Model\Jenkins\Job\JobRepository;
-use App\Model\Jenkins\PullRequest\PullRequestRepository;
+use App\Model\Jenkins\Run\ListableRunRepository;
+use App\Model\Jenkins\Run\SaveableRunRepository;
 
 /**
  * @author    Alexandre Hocquard <alexandre.hocquard@akeneo.com>
@@ -18,59 +16,35 @@ use App\Model\Jenkins\PullRequest\PullRequestRepository;
 class ImportContinuousIntegrationMetricsHandler
 {
 
-    /** @var JobRepository */
-    private $jobRepository;
+    /** @var ListableRunRepository */
+    private $listableRunRepository;
 
-    /** @var PullRequestRepository */
-    private $pullRequestRepository;
-
-    /** @var SaveableBuildRepository */
-    private $sourceBuildRepository;
-
-    /** @var SaveableBuildRepository */
-    private $targetBuildRepository;
+    /** @var SaveableRunRepository */
+    private $saveableRunRepository;
 
     public function __construct(
-        JobRepository $jobRepository,
-        PullRequestRepository $pullRequestRepository,
-        ListableBuildRepository $sourceBuildRepository,
-        SaveableBuildRepository $targetBuildRepository
+        ListableRunRepository $listableRunRepository,
+        SaveableRunRepository $saveableRunRepository
     ) {
-        $this->jobRepository = $jobRepository;
-        $this->pullRequestRepository = $pullRequestRepository;
-        $this->sourceBuildRepository = $sourceBuildRepository;
-        $this->targetBuildRepository = $targetBuildRepository;
+        $this->listableRunRepository = $listableRunRepository;
+        $this->saveableRunRepository = $saveableRunRepository;
     }
 
     public function handle(ImportContinuousIntegrationMetrics $command): void
     {
-        $buildsToImport = [];
+        $runsToImport = [];
 
-        $jobs = $this->jobRepository->listJobs();
-        $filteredJobs = array_filter($jobs, function (Job $job) use ($command) {
-            foreach ($command->jobNames as $jobName) {
-                if ($jobName->value() === $job->fullName()->value()) {
-                    return true;
-                }
-            }
+        foreach ($command->pipelineNames as $pipelineName) {
+            $runs = $this->listableRunRepository->listRunsFrom($pipelineName);
 
-            return false;
-        });
-
-        foreach ($filteredJobs as $job) {
-            $pullRequests = $this->pullRequestRepository->listPullRequestsFrom($job);
-
-            foreach ($pullRequests as $pullRequest) {
-                $builds = $this->sourceBuildRepository->listBuildsFrom($pullRequest);
-
-                foreach ($builds as $build) {
-                    if ($build->isBuildFinished() && !$this->targetBuildRepository->hasBuild($build)) {
-                        $buildsToImport[] = $build;
-                    }
+            foreach ($runs as $run) {
+                if ($run->isRunFinished() && !$this->saveableRunRepository->hasRun($run)) {
+                    $runsToImport[] = $run;
                 }
             }
         }
 
-        $this->targetBuildRepository->saveBuilds($buildsToImport);
+
+        $this->saveableRunRepository->saveRuns($runsToImport);
     }
 }
