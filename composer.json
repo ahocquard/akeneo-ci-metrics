@@ -4,9 +4,12 @@
     "require": {
         "php": "^7.1.3",
         "ext-iconv": "*",
+        "eightpoints/guzzle-bundle": "^7.3",
+        "guzzlehttp/guzzle": "~6.0",
         "symfony/console": "^4.0",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^4.0",
+        "symfony/lock": "^4.0",
         "symfony/lts": "^4@dev",
         "symfony/yaml": "^4.0"
     },
@@ -54,7 +57,7 @@
     "extra": {
         "symfony": {
             "id": "01C87RQT3ZDTNA3QMCZZ3E56EP",
-            "allow-contrib": false
+            "allow-contrib": "true"
         }
     }
 }

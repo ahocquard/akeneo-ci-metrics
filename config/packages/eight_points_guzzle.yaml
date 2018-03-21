@@ -1,0 +1,12 @@
+eight_points_guzzle:
+    clients:
+        jenkins_client:
+            base_url: 'https://ci.akeneo.com/blue/rest/organizations/jenkins/pipelines/akeneo/'
+
+            options:
+                auth:
+                    - username
+                    - password
+
+        influxdb_client:
+            base_url: 'http://localhost:8086/'

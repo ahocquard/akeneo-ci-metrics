@@ -2,6 +2,24 @@
     "doctrine/instantiator": {
         "version": "1.1.0"
     },
+    "eightpoints/guzzle-bundle": {
+        "version": "7.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "7.0",
+            "ref": "8be83603226d268ee8a93721b5bb77ec71d8d334"
+        }
+    },
+    "guzzlehttp/guzzle": {
+        "version": "6.3.0"
+    },
+    "guzzlehttp/promises": {
+        "version": "v1.3.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.4.2"
+    },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
     },
@@ -25,6 +43,9 @@
     },
     "psr/container": {
         "version": "1.0.0"
+    },
+    "psr/http-message": {
+        "version": "1.0.1"
     },
     "psr/log": {
         "version": "1.0.2"
@@ -71,6 +92,9 @@
     "symfony/event-dispatcher": {
         "version": "v4.0.6"
     },
+    "symfony/expression-language": {
+        "version": "v4.0.6"
+    },
     "symfony/filesystem": {
         "version": "v4.0.6"
     },
@@ -99,6 +123,9 @@
         "version": "v4.0.6"
     },
     "symfony/http-kernel": {
+        "version": "v4.0.6"
+    },
+    "symfony/lock": {
         "version": "v4.0.6"
     },
     "symfony/lts": {
