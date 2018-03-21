@@ -19,6 +19,8 @@ interface SaveableRunRepository
     /**
      * @param Run $run
      *
+     * @throws RunSaveException
+     *
      * @return bool
      */
     public function hasRun(Run $run): bool;

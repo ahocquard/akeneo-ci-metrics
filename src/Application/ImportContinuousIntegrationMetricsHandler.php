@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application;
 
-use App\Model\Jenkins\Job\Job;
 use App\Model\Jenkins\Run\ListableRunRepository;
 use App\Model\Jenkins\Run\SaveableRunRepository;
 
@@ -43,7 +42,6 @@ class ImportContinuousIntegrationMetricsHandler
                 }
             }
         }
-
 
         $this->saveableRunRepository->saveRuns($runsToImport);
     }

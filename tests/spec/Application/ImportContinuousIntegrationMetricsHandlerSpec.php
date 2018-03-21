@@ -6,17 +6,7 @@ namespace spec\App\Application;
 
 use App\Application\ImportContinuousIntegrationMetrics;
 use App\Application\ImportContinuousIntegrationMetricsHandler;
-use App\Model\Jenkins\Build\Build;
-use App\Model\Jenkins\Build\ListableBuildRepository;
-use App\Model\Jenkins\Build\SaveableBuildRepository;
-use App\Model\Jenkins\Build\BuildUri;
-use App\Model\Jenkins\Job\Job;
-use App\Model\Jenkins\Job\JobName;
-use App\Model\Jenkins\Job\JobRepository;
 use App\Model\Jenkins\Pipeline\PipelineName;
-use App\Model\Jenkins\PullRequest\PullRequest;
-use App\Model\Jenkins\PullRequest\PullRequestRepository;
-use App\Model\Jenkins\PullRequest\PullRequestUri;
 use App\Model\Jenkins\Run\ListableRunRepository;
 use App\Model\Jenkins\Run\Run;
 use App\Model\Jenkins\Run\SaveableRunRepository;
