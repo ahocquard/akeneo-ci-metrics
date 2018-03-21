@@ -5,13 +5,20 @@ services:
         image: influxdb:1.2-alpine
         volumes:
             - influxdb:/var/lib/influxdb
+        ports:
+            - '8086:8086'
 
     chronograf:
-        image: chronograf:1.3-alpine
+        image: chronograf:1.4-alpine
         volumes:
             - chronograf:/var/lib/chronograf
         environment:
             INFLUXDB_URL: http://influxdb:8086
+            AUTH_DURATION: 1h
+            TOKEN_SECRET: secret
+            GH_CLIENT_ID: client
+            GH_CLIENT_SECRET: password
+            GH_ORGS: akeneo
         ports:
             - '8888:8888'
 
