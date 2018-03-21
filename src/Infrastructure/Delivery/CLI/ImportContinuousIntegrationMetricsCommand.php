@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Delivery\Command;
+namespace App\Infrastructure\Delivery\CLI;
 
 use App\Application\ImportContinuousIntegrationMetrics;
 use App\Application\ImportContinuousIntegrationMetricsHandler;
