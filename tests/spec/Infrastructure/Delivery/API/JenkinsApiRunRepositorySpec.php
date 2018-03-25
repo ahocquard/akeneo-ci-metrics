@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace spec\App\Infrastructure\Delivery\API;
 
-use App\Infrastructure\Delivery\API\JenkinsApiRunRepository;
 use App\Model\Jenkins\Pipeline\PipelineName;
 use App\Model\Jenkins\Run\Run;
 use App\Model\Jenkins\Step\StepUri;

@@ -9,20 +9,18 @@ namespace App\Model\Jenkins\Run;
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-interface SaveableRunRepository
+class RunId
 {
-    /**
-     * @param Run[] $runs
-     */
-    public function saveRuns(array $runs): void;
+    /** @var string */
+    private $id;
 
-    /**
-     * @param Run $run
-     *
-     * @throws RunSaveException
-     *
-     * @return bool
-     */
-    public function hasRun(Run $run): bool;
+    public function __construct(string $id)
+    {
+        $this->id = $id;
+    }
 
+    public function value(): string
+    {
+        return $this->id;
+    }
 }

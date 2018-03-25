@@ -16,8 +16,8 @@ services:
             INFLUXDB_URL: http://influxdb:8086
             AUTH_DURATION: 1h
             TOKEN_SECRET: secret
-            GH_CLIENT_ID: client
-            GH_CLIENT_SECRET: password
+            GH_CLIENT_ID: 98cd59f49a8008b7cd30
+            GH_CLIENT_SECRET: 699bde78ca8001624fe836efe2f3aa00d519510e
             GH_ORGS: akeneo
         ports:
             - '8888:8888'

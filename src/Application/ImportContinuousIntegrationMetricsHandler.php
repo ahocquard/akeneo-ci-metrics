@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application;
 
-use App\Model\Jenkins\Run\ListableRunRepository;
-use App\Model\Jenkins\Run\SaveableRunRepository;
+use App\Model\Jenkins\Pipeline\PipelineRepository;
+use App\Model\Jenkins\Run\RunRepository;
 
 /**
  * @author    Alexandre Hocquard <alexandre.hocquard@akeneo.com>
@@ -14,35 +14,36 @@ use App\Model\Jenkins\Run\SaveableRunRepository;
  */
 class ImportContinuousIntegrationMetricsHandler
 {
+    /** @var PipelineRepository */
+    private $pipelineRepository;
 
-    /** @var ListableRunRepository */
-    private $listableRunRepository;
-
-    /** @var SaveableRunRepository */
+    /** @var RunRepository */
     private $saveableRunRepository;
 
     public function __construct(
-        ListableRunRepository $listableRunRepository,
-        SaveableRunRepository $saveableRunRepository
+        PipelineRepository $pipelineRepository,
+        RunRepository $runRepository
     ) {
-        $this->listableRunRepository = $listableRunRepository;
-        $this->saveableRunRepository = $saveableRunRepository;
+        $this->saveableRunRepository = $runRepository;
+        $this->pipelineRepository = $pipelineRepository;
     }
 
     public function handle(ImportContinuousIntegrationMetrics $command): void
     {
-        $runsToImport = [];
-
         foreach ($command->pipelineNames as $pipelineName) {
-            $runs = $this->listableRunRepository->listRunsFrom($pipelineName);
+            $runsToImport = [];
+            $pipeline = $this->pipelineRepository->getPipeline($pipelineName);
 
-            foreach ($runs as $run) {
-                if ($run->isRunFinished() && !$this->saveableRunRepository->hasRun($run)) {
-                    $runsToImport[] = $run;
+            foreach ($pipeline->branches() as $branch) {
+                foreach ($branch->runs() as $run) {
+                    if ($run->isRunFinished() && !$this->saveableRunRepository->hasRun($run)) {
+                        $runsToImport[] = $run;
+                    }
                 }
-            }
-        }
 
-        $this->saveableRunRepository->saveRuns($runsToImport);
+            }
+
+            $this->saveableRunRepository->saveRuns($runsToImport);
+        }
     }
 }
