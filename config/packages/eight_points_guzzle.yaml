@@ -5,8 +5,8 @@ eight_points_guzzle:
 
             options:
                 auth:
-                    - username
-                    - password
+                    - ahocquard
+                    - ooo
 
         influxdb_client:
             base_url: 'http://localhost:8086/'

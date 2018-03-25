@@ -6,6 +6,8 @@ namespace App\Infrastructure\Delivery\CLI;
 
 use App\Application\Command\ImportRunMetrics;
 use App\Application\Command\ImportRunMetricsHandler;
+use App\Application\Command\ImportTestMetrics;
+use App\Application\Command\ImportTestMetricsHandler;
 use App\Model\Jenkins\Pipeline\PipelineName;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LockableTrait;
@@ -17,11 +19,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class ImportContinuousIntegrationMetricsCommand extends Command
+class ImportTestMetricsCommand extends Command
 {
     use LockableTrait;
 
-    protected static $defaultName = 'akeneo:import:ci-metrics';
+    protected static $defaultName = 'akeneo:import:test-metrics';
 
     /** @var ImportRunMetricsHandler */
     private $handler;
@@ -30,10 +32,10 @@ class ImportContinuousIntegrationMetricsCommand extends Command
     private $pipelineNames;
 
     /**
-     * @param ImportRunMetricsHandler $handler
-     * @param PipelineName[]          $pipelineNames
+     * @param ImportTestMetricsHandler $handler
+     * @param PipelineName[]           $pipelineNames
      */
-    public function __construct(ImportRunMetricsHandler $handler, array $pipelineNames)
+    public function __construct(ImportTestMetricsHandler $handler, array $pipelineNames)
     {
         parent::__construct();
 
@@ -60,7 +62,7 @@ class ImportContinuousIntegrationMetricsCommand extends Command
 
             return 0;
         }
-        $command = new ImportRunMetrics();
+        $command = new ImportTestMetrics();
         $command->pipelineNames = $this->pipelineNames;
 
         $this->handler->handle($command);

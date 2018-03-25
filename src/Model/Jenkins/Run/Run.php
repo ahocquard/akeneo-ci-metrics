@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Jenkins\Run;
 
+use App\Model\Jenkins\Branch\BranchName;
 use App\Model\Jenkins\Pipeline\PipelineName;
-use App\Model\Jenkins\Step\StepUri;
 
 /**
  * In Blue Ocean, a run is a build for a given branch/pull request.
@@ -18,14 +18,14 @@ class Run
 {
     private const RUN_FINISHED = 'FINISHED';
 
-    /** @var string */
-    private $name;
-
-    /** @var int */
-    private $runNumber;
-
     /** @var PipelineName */
     private $pipelineName;
+
+    /** @var BranchName */
+    private $branchName;
+
+    /** @var RunId */
+    private $id;
 
     /** @var string */
     private $result;
@@ -33,7 +33,7 @@ class Run
     /** @var string */
     private $state;
 
-    /** @var int */
+    /** @var int duration in seconds */
     private $duration;
 
     /** @var \DateTimeInterface */
@@ -57,13 +57,10 @@ class Run
     /** @var int */
     private $numberOfTests;
 
-    /** @var StepUri */
-    private $stepUri;
-
     /**
-     * @param string                  $name
-     * @param int                     $runNumber
      * @param PipelineName            $pipelineName
+     * @param BranchName              $branchName
+     * @param RunId                   $id
      * @param string                  $result
      * @param string                  $state
      * @param int                     $duration
@@ -74,12 +71,11 @@ class Run
      * @param int                     $numberOfSkippedTests
      * @param int                     $numberOfSucceededTests
      * @param int                     $numberOfTests
-     * @param StepUri                 $stepUri
      */
     public function __construct(
-        string $name,
-        int $runNumber,
         PipelineName $pipelineName,
+        BranchName $branchName,
+        RunId $id,
         string $result,
         string $state,
         int $duration,
@@ -89,12 +85,11 @@ class Run
         int $numberOfFailedTests,
         int $numberOfSkippedTests,
         int $numberOfSucceededTests,
-        int $numberOfTests,
-        StepUri $stepUri
+        int $numberOfTests
     ) {
-        $this->name = $name;
-        $this->runNumber = $runNumber;
         $this->pipelineName = $pipelineName;
+        $this->branchName = $branchName;
+        $this->id = $id;
         $this->result = $result;
         $this->state = $state;
         $this->duration = $duration;
@@ -105,7 +100,21 @@ class Run
         $this->numberOfSkippedTests = $numberOfSkippedTests;
         $this->numberOfSucceededTests = $numberOfSucceededTests;
         $this->numberOfTests = $numberOfTests;
-        $this->stepUri = $stepUri;
+    }
+
+    public function pipelineName(): PipelineName
+    {
+        return $this->pipelineName;
+    }
+
+    public function branchName(): BranchName
+    {
+        return $this->branchName;
+    }
+
+    public function id(): RunId
+    {
+        return $this->id;
     }
 
     public function isRunFinished(): bool
@@ -118,25 +127,15 @@ class Run
      */
     public function isPullRequestRun(): bool
     {
-        return false !== strpos($this->name, 'PR-');
+        return false !== strpos($this->branchName->value(), 'PR-');
     }
 
     /**
      * Indicate whether the run concerns a branch (master, 1.x, 2.x)
      */
-    public function isBranchRun(): bool
+    public function isOriginBranchRun(): bool
     {
         return !$this->isPullRequestRun();
-    }
-
-    public function identifier(): string
-    {
-        return $this->pipelineName->value() . '_' . $this->name . '_' . $this->runNumber;
-    }
-
-    public function name(): string
-    {
-        return $this->pipelineName->value() . '_' . $this->name;
     }
 
     public function duration(): int
@@ -159,27 +158,22 @@ class Run
         return $this->startTime->getTimestamp();
     }
 
-    public function pipelineName(): PipelineName
-    {
-        return $this->pipelineName;
-    }
-
-    public function numberOfFailedTests()
+    public function numberOfFailedTests(): int
     {
         return $this->numberOfFailedTests;
     }
 
-    public function numberOfSkippedTests()
+    public function numberOfSkippedTests(): int
     {
-        return $this->numberOfFailedTests;
+        return $this->numberOfSkippedTests;
     }
 
-    public function numberOfSucceededTests()
+    public function numberOfSucceededTests(): int
     {
-        return $this->numberOfFailedTests;
+        return $this->numberOfSucceededTests;
     }
 
-    public function numberOfTests()
+    public function numberOfTests(): int
     {
         return $this->numberOfTests;
     }

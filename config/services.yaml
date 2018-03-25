@@ -27,9 +27,19 @@ services:
             $pipelineNames:
                 - 'pim-community-dev'
 
+    App\Infrastructure\Delivery\CLI\ImportTestMetricsCommand:
+        arguments:
+            $pipelineNames:
+                - 'pim-community-dev'
+
     GuzzleHttp\ClientInterface: '@eight_points_guzzle.client.jenkins_client'
 
     App\Infrastructure\Persistence\API\InfluxDBApiRunRepository:
+        arguments:
+            $client: '@eight_points_guzzle.client.influxdb_client'
+            $databaseName: '%influx_db.name%'
+
+    App\Infrastructure\Persistence\API\InfluxDBApiTestRepository:
         arguments:
             $client: '@eight_points_guzzle.client.influxdb_client'
             $databaseName: '%influx_db.name%'
