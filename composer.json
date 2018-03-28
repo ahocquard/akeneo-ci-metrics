@@ -13,6 +13,7 @@
         "symfony/lock": "^4.0",
         "symfony/lts": "^4@dev",
         "symfony/monolog-bundle": "^3.2",
+        "symfony/orm-pack": "^1.0",
         "symfony/yaml": "^4.0"
     },
     "require-dev": {
