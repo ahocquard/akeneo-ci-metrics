@@ -1,6 +1,18 @@
 version: '3.2'
 
 services:
+    mysql:
+      image: mysql:8.0
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: user
+        MYSQL_PASSWORD: password
+        MYSQL_DATABASE: akeneo_ci_metrics
+      ports:
+        - '33015:3306'
+#      networks:
+#        - akeneo
+
     influxdb:
         image: influxdb:1.2-alpine
         volumes:
@@ -21,6 +33,16 @@ services:
             GH_ORGS: akeneo
         ports:
             - '8888:8888'
+
+    grafana:
+        image: grafana/grafana:latest
+        ports:
+            - "3000:3000"
+        environment:
+            INFLUXDB_URL: http://influxdb:8086
+        links:
+            - influxdb
+
 
 volumes:
     influxdb: ~
