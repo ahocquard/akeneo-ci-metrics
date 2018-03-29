@@ -98,4 +98,9 @@ class Test
     {
         return $this->executionTime->getTimestamp();
     }
+
+    public function executionTime(): \DateTimeInterface
+    {
+        return $this->executionTime;
+    }
 }

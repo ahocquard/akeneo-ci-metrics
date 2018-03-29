@@ -110,7 +110,7 @@ SQL;
                 `branch_name` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
                 `run_id` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
                 `test_name` varchar(400) COLLATE utf8_unicode_ci NOT NULL,
-                `duration` MEDIUMINT(6) NOT NULL,
+                `duration` float(9,5) NOT NULL,
                 `execution_time` datetime NOT NULL,
                  PRIMARY KEY (`id`),
                  UNIQUE KEY `unique_value` (`pipeline_name`,`branch_name`,`run_id`, `test_name`),

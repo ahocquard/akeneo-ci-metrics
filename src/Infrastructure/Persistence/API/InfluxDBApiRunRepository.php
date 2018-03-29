@@ -6,7 +6,6 @@ namespace App\Infrastructure\Persistence\API;
 
 use App\Model\Jenkins\Run\Exception\RunSaveException;
 use App\Model\Jenkins\Run\Run;
-use App\Model\Jenkins\Run\RunRepository;
 use GuzzleHttp\ClientInterface;
 
 /**
@@ -14,7 +13,7 @@ use GuzzleHttp\ClientInterface;
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class InfluxDBApiRunRepository implements RunRepository
+class InfluxDBApiRunRepository
 {
     /** @var ClientInterface */
     private $client;

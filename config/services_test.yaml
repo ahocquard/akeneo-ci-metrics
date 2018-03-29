@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        public: true
+
+    test.App\Infrastructure\Persistence\API\MysqlRunRepository: '@App\Model\Jenkins\Run\RunRepository'
+    test.App\Infrastructure\Persistence\API\MysqlTestRepository: '@App\Model\Jenkins\Test\TestRepository'
+    test.Doctrine\DBAL\Connection: '@Doctrine\DBAL\Connection'

@@ -8,31 +8,43 @@ services:
         MYSQL_USER: user
         MYSQL_PASSWORD: password
         MYSQL_DATABASE: akeneo_ci_metrics
+      volumes:
+        - mysql:/var/lib/mysql
       ports:
-        - '33015:3306'
+        - '3306:3306'
+
+    mysql-test:
+      image: mysql:8.0
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: user
+        MYSQL_PASSWORD: password
+        MYSQL_DATABASE: akeneo_ci_metrics
+      ports:
+        - '3307:3306'
 #      networks:
 #        - akeneo
 
-    influxdb:
-        image: influxdb:1.2-alpine
-        volumes:
-            - influxdb:/var/lib/influxdb
-        ports:
-            - '8086:8086'
+#    influxdb:
+#        image: influxdb:1.2-alpine
+#        volumes:
+#            - influxdb:/var/lib/influxdb
+#        ports:
+#            - '8086:8086'
 
-    chronograf:
-        image: chronograf:1.4-alpine
-        volumes:
-            - chronograf:/var/lib/chronograf
-        environment:
-            INFLUXDB_URL: http://influxdb:8086
-            AUTH_DURATION: 1h
-            TOKEN_SECRET: secret
-            GH_CLIENT_ID: 98cd59f49a8008b7cd30
-            GH_CLIENT_SECRET: 699bde78ca8001624fe836efe2f3aa00d519510e
-            GH_ORGS: akeneo
-        ports:
-            - '8888:8888'
+#    chronograf:
+#        image: chronograf:1.4-alpine
+#        volumes:
+#            - chronograf:/var/lib/chronograf
+#        environment:
+#            INFLUXDB_URL: http://influxdb:8086
+#            AUTH_DURATION: 1h
+#            TOKEN_SECRET: secret
+#            GH_CLIENT_ID: 98cd59f49a8008b7cd30
+#            GH_CLIENT_SECRET: 699bde78ca8001624fe836efe2f3aa00d519510e
+#            GH_ORGS: akeneo
+#        ports:
+#            - '8888:8888'
 
     grafana:
         image: grafana/grafana:latest
@@ -43,10 +55,10 @@ services:
         links:
             - influxdb
 
-
 volumes:
     influxdb: ~
     chronograf: ~
+    mysql: ~
 
 networks:
     default:

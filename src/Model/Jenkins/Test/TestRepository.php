@@ -15,5 +15,5 @@ interface TestRepository
 {
     public function saveTests(array $tests): void;
 
-    public function hasRun(Run $run): bool;
+    public function hasTestsFor(Run $run): bool;
 }

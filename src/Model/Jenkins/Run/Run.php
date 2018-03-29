@@ -153,6 +153,11 @@ class Run
         return $this->result;
     }
 
+    public function startTime(): \DateTimeInterface
+    {
+        return $this->startTime;
+    }
+
     public function startTimestamp(): int
     {
         return $this->startTime->getTimestamp();
