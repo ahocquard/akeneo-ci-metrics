@@ -17,11 +17,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class ImportContinuousIntegrationMetricsCommand extends Command
+class ImportRunMetricsCommand extends Command
 {
     use LockableTrait;
 
-    protected static $defaultName = 'akeneo:import:ci-metrics';
+    protected static $defaultName = 'akeneo:import:run-metrics';
 
     /** @var ImportRunMetricsHandler */
     private $handler;
