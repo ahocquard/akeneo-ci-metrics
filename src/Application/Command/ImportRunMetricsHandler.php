@@ -44,11 +44,11 @@ class ImportRunMetricsHandler
     {
         $this->logger->info('Starting to import run metrics.');
         foreach ($command->pipelineNames as $pipelineName) {
-            $runsToImport = [];
             $pipeline = $this->pipelineRepository->getPipeline($pipelineName);
 
             foreach ($pipeline->branches() as $branch) {
 
+                $runsToImport = [];
                 $runs = $this->listableRunRepository->listRunsFrom($branch);
                 $this->logger->debug(sprintf('List runs from branch "%s".', $branch->name()->value()));
                 foreach ($runs as $run) {
@@ -56,9 +56,10 @@ class ImportRunMetricsHandler
                         $runsToImport[] = $run;
                     }
                 }
+
+                $this->saveableRunRepository->saveRuns($runsToImport);
             }
 
-            $this->saveableRunRepository->saveRuns($runsToImport);
         }
     }
 }
