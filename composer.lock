@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3955c234fe2f67d74cb5177d4bb5b876",
-    "content-hash": "1624862dc89381fd7480ab2a85958f54",
+    "hash": "a3747255b5bf55a1c3358bb6516a33fb",
+    "content-hash": "082de1b2d6539f07e22e15123d8e9c4a",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -3183,6 +3183,50 @@
     ],
     "packages-dev": [
         {
+            "name": "donatj/mock-webserver",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/donatj/mock-webserver.git",
+                "reference": "0a124a2261fd99463267e82ca9c4eb37fb656cf7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/donatj/mock-webserver/zipball/0a124a2261fd99463267e82ca9c4eb37fb656cf7",
+                "reference": "0a124a2261fd99463267e82ca9c4eb37fb656cf7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-sockets": "*",
+                "php": ">=5.4",
+                "ralouphie/getallheaders": "~2.0"
+            },
+            "require-dev": {
+                "donatj/drop": "^1.0",
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "donatj\\MockWebServer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jesse G. Donat",
+                    "email": "donatj@gmail.com",
+                    "homepage": "https://donatstudios.com",
+                    "role": "Lead"
+                }
+            ],
+            "description": "Simple mock web server for unit testing",
+            "time": "2018-03-27 16:25:36"
+        },
+        {
             "name": "phpdocumentor/reflection-common",
             "version": "1.0.1",
             "source": {
@@ -3515,6 +3559,46 @@
                 "stub"
             ],
             "time": "2018-02-19 10:16:54"
+        },
+        {
+            "name": "ralouphie/getallheaders",
+            "version": "2.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ralouphie/getallheaders.git",
+                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ralouphie/getallheaders/zipball/5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
+                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7.0",
+                "satooshi/php-coveralls": ">=1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/getallheaders.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ralph Khattar",
+                    "email": "ralph.khattar@gmail.com"
+                }
+            ],
+            "description": "A polyfill for getallheaders.",
+            "time": "2016-02-11 07:05:27"
         },
         {
             "name": "sebastian/comparator",

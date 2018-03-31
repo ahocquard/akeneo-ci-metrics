@@ -50,10 +50,10 @@ services:
         image: grafana/grafana:latest
         ports:
             - "3000:3000"
-        environment:
-            INFLUXDB_URL: http://influxdb:8086
-        links:
-            - influxdb
+#        environment:
+#            INFLUXDB_URL: http://influxdb:8086
+#        links:
+#            - influxdb
 
 volumes:
     influxdb: ~

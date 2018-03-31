@@ -1,7 +1,13 @@
+parameters:
+    akeneo_ci.api.url: 'http://127.0.0.1:8081/blue/rest/organizations/jenkins/pipelines/akeneo/'
+
 services:
     _defaults:
         public: true
 
     test.App\Infrastructure\Persistence\API\MysqlRunRepository: '@App\Model\Jenkins\Run\RunRepository'
     test.App\Infrastructure\Persistence\API\MysqlTestRepository: '@App\Model\Jenkins\Test\TestRepository'
+    test.App\Infrastructure\API\Jenkins\JenkinsHttpApiPipelineRepository: '@App\Model\Jenkins\Pipeline\GettablePipelineRepository'
+    test.App\Infrastructure\API\Jenkins\JenkinsHttpRunPipelineRepository: '@App\Model\Jenkins\Run\ListableRunRepository'
+    test.App\Infrastructure\API\Jenkins\JenkinsHttpTestPipelineRepository: '@App\Model\Jenkins\Test\ListableTestRepository'
     test.Doctrine\DBAL\Connection: '@Doctrine\DBAL\Connection'
