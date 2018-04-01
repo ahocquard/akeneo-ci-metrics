@@ -69,10 +69,7 @@ class ImportTestMetricsHandler
                         $testsToImport = $this->listableTestRepository->listTestsFrom($run);
 
                         $this->saveableTestRepository->saveTests($testsToImport);
-                        break;
                     }
-
-                    break;
                 }
             }
 
