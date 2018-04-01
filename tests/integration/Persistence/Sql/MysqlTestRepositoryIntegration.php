@@ -78,6 +78,7 @@ SQL;
                 'duration' => '0.0002',
                 'execution_time' => '2018-03-21 09:10:04',
                 'test_name' => 'Test / behat-ce / test_1',
+                'type' => 'behat-ce',
             ],
             [
                 'pipeline_name' => 'pim-community-dev',
@@ -86,6 +87,7 @@ SQL;
                 'duration' => '1.879',
                 'execution_time' => '2018-03-21 09:10:05',
                 'test_name' => 'Test / behat-ce / test_2',
+                'type' => 'behat-ce',
             ]
         ];
         $this->assertEquals($expectedResponse, $response);

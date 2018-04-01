@@ -110,11 +110,13 @@ SQL;
                 `branch_name` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
                 `run_id` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
                 `test_name` varchar(400) COLLATE utf8_unicode_ci NOT NULL,
+                `type` varchar(400) COLLATE utf8_unicode_ci NOT NULL,
                 `duration` float(9,5) NOT NULL,
                 `execution_time` datetime NOT NULL,
                  PRIMARY KEY (`id`),
-                 UNIQUE KEY `unique_value` (`pipeline_name`,`branch_name`,`run_id`, `test_name`),
+                 KEY `identifier_index` (`pipeline_name`,`branch_name`,`run_id`, `test_name`),
                  KEY `duration_index` (`duration`),
+                 KEY `type_index` (`type`),
                  KEY `execution_time_index` (`execution_time`)
            ) ENGINE=InnoDB AUTO_INCREMENT=1355 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SQL;

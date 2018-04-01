@@ -42,6 +42,7 @@ class MysqlTestRepository implements TestRepository
                 branch_name, 
                 run_id,
                 test_name,
+                type,
                 duration,
                 execution_time
             )
@@ -50,6 +51,7 @@ class MysqlTestRepository implements TestRepository
                 :branch_name, 
                 :run_id,
                 :test_name, 
+                :type, 
                 :duration, 
                 :execution_time
             )
@@ -63,6 +65,7 @@ SQL;
             $stmt->bindValue('branch_name', $test->branchName()->value(), Type::STRING);
             $stmt->bindValue('run_id', $test->runId()->value(), Type::STRING);
             $stmt->bindValue('test_name', $test->name()->value(), Type::STRING);
+            $stmt->bindValue('type', $test->type(), Type::STRING);
             $stmt->bindValue('duration', $test->duration(), Type::FLOAT);
             $stmt->bindValue('execution_time', $test->executionTime(), Type::DATETIME);
             $stmt->execute();
