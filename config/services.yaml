@@ -2,7 +2,6 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     akeneo_ci.api.url: 'https://ci.akeneo.com/blue/rest/organizations/jenkins/pipelines/akeneo/'
-    influx_db.name: 'akeneo_ci_metrics'
 
 services:
     # default configuration for services in *this* file
@@ -33,13 +32,3 @@ services:
                 - 'pim-community-dev'
 
     GuzzleHttp\ClientInterface: '@eight_points_guzzle.client.jenkins_client'
-
-    App\Infrastructure\Persistence\API\InfluxDBApiRunRepository:
-        arguments:
-            $client: '@eight_points_guzzle.client.influxdb_client'
-            $databaseName: '%influx_db.name%'
-
-    App\Infrastructure\Persistence\API\InfluxDBApiTestRepository:
-        arguments:
-            $client: '@eight_points_guzzle.client.influxdb_client'
-            $databaseName: '%influx_db.name%'
