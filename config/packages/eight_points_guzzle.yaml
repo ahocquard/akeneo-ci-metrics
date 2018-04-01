@@ -1,9 +1,8 @@
 eight_points_guzzle:
     clients:
         jenkins_client:
-            base_url: '%akeneo_ci.api.url%'
-
+            base_url: '%env(resolve:JENKINS_API_URL)%'
             options:
                 auth:
-                    - ahocquard
-                    - ooo
+                    - '%env(resolve:GITHUB_USER)%'
+                    - '%env(resolve:GITHUB_TOKEN)%'
