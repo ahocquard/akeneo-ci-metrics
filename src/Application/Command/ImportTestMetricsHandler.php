@@ -58,7 +58,10 @@ class ImportTestMetricsHandler
                 $runs = $this->listableRunRepository->listRunsFrom($branch);
                 $this->logger->debug(sprintf('List runs from branch "%s".', $branch->name()->value()));
                 foreach ($runs as $run) {
-                    if ($run->isRunFinished() && !$this->saveableTestRepository->hasTestsFor($run)) {
+                    if ($run->isRunFinished()
+                        && $run->numberOfTests() > 0
+                        && !$this->saveableTestRepository->hasTestsFor($run)
+                    ) {
                         $this->logger->debug(
                             sprintf(
                                 'List tests from branch "%s" and run "%s".',

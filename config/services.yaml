@@ -17,10 +17,12 @@ services:
         arguments:
             $pipelineNames:
                 - 'pim-community-dev'
+                - 'pim-enterprise-dev'
 
     App\Infrastructure\Delivery\CLI\ImportTestMetricsCommand:
         arguments:
             $pipelineNames:
                 - 'pim-community-dev'
+                - 'pim-enterprise-dev'
 
     GuzzleHttp\ClientInterface: '@eight_points_guzzle.client.jenkins_client'

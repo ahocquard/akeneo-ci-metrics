@@ -42,7 +42,7 @@ class JenkinsHttpApiTestRepository implements ListableTestRepository
     {
         $tests = [];
         $start = 0;
-        $limit = 100;
+        $limit = 10000;
 
         do {
             try {

@@ -40,21 +40,21 @@ class JenkinsHttpApiTestRepositorySpec extends ObjectBehavior
         $client->request('GET', 'pim-community-dev/branches/PR-7845/runs/1/tests',[
             'query' => [
                 'start' => 0,
-                'limit' => 100,
+                'limit' => 10000,
                 'tree' => 'duration,name'
              ]
          ])->willReturn($firstPageResponse);
         $client->request('GET', 'pim-community-dev/branches/PR-7845/runs/1/tests',[
             'query' => [
                 'start' => 100,
-                'limit' => 100,
+                'limit' => 10000,
                 'tree' => 'duration,name'
             ]
         ])->willReturn($secondPageResponse);
         $client->request('GET', 'pim-community-dev/branches/PR-7845/runs/1/tests',[
             'query' => [
                 'start' => 200,
-                'limit' => 100,
+                'limit' => 10000,
                 'tree' => 'duration,name'
             ]
         ])->willReturn($thirdPageResponse);
