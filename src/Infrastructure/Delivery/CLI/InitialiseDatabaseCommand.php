@@ -115,6 +115,7 @@ SQL;
                 `execution_time` datetime NOT NULL,
                  PRIMARY KEY (`id`),
                  KEY `identifier_index` (`pipeline_name`,`branch_name`,`run_id`, `test_name`),
+                 KEY `run_index` (`pipeline_name`,`branch_name`,`run_id`, `type`),
                  KEY `duration_index` (`duration`),
                  KEY `type_index` (`type`),
                  KEY `execution_time_index` (`execution_time`)
