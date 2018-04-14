@@ -53,6 +53,7 @@ class ImportRunMetricsHandler
                 $this->logger->debug(sprintf('List runs from branch "%s".', $branch->name()->value()));
                 foreach ($runs as $run) {
                     if ($run->isRunFinished() && !$this->saveableRunRepository->hasRun($run)) {
+                        $this->logger->debug(sprintf('Importing run "%s".', $run->id()->value()));
                         $runsToImport[] = $run;
                     }
                 }
