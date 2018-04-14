@@ -14,7 +14,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "5.0.3"
+      "version": "5.0.4"
     },
     {
       "type": "panel",
@@ -47,7 +47,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1522789485569,
+  "iteration": 1523694751277,
   "links": [],
   "panels": [
     {
@@ -57,6 +57,7 @@
       "dashes": false,
       "datasource": "${DS_MYSQL_CI METRICS}",
       "decimals": 1,
+      "description": "It represents the time to execute the nighty build over time.\n\nOnly runs having at least one test executed are taken into account.\n\nFor example, a run with a failing \"composer\" or a run aborted by the user are not taken in account.",
       "fill": 1,
       "gridPos": {
         "h": 13,
@@ -71,6 +72,7 @@
         "current": false,
         "max": true,
         "min": false,
+        "rightSide": false,
         "show": true,
         "sort": "avg",
         "sortDesc": false,
@@ -101,7 +103,7 @@
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Nightly builds",
+      "title": "Nightly builds - average duration per day",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -142,6 +144,7 @@
       "dashes": false,
       "datasource": "${DS_MYSQL_CI METRICS}",
       "decimals": 1,
+      "description": "It represents the number of runs per day and the average time to execute them. Nightly build are excluded. \n\nOnly runs having at least one test executed are taken into account.\n\nFor example, a run with a failing \"composer\" or a run aborted by the user are not taken in account.",
       "fill": 2,
       "gridPos": {
         "h": 9,
@@ -160,6 +163,7 @@
         "min": true,
         "rightSide": false,
         "show": true,
+        "sortDesc": false,
         "total": false,
         "values": true
       },
@@ -171,7 +175,12 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "alias": "number-runs",
+          "yaxis": 2
+        }
+      ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
@@ -180,14 +189,20 @@
           "alias": "",
           "format": "time_series",
           "hide": false,
-          "rawSql": "SELECT\n  min(UNIX_TIMESTAMP(start_time)) as time_sec,\n  avg(duration) as value,\n  'average-time' as metric\nFROM run_metric\nWHERE (result = 'SUCCESS' or result = 'FAILURE' or 'ABORTED')\nAND is_pull_request = 1\nAND total_tests > 0\nAND pipeline_name IN ($pipeline_name)\nGROUP BY 'average-time', UNIX_TIMESTAMP(start_time) DIV 86400\nORDER BY time_sec asc\n\n\n\n",
+          "rawSql": "SELECT\n  min(UNIX_TIMESTAMP(start_time)) as time_sec,\n  avg(duration) as value,\n  'average-time' as metric\nFROM run_metric\nWHERE (result = 'SUCCESS' or result = 'FAILURE' or 'ABORTED')\nAND is_pull_request = 1\nAND total_tests > 0\nAND pipeline_name IN ($pipeline_name)\n-- not reliable before because runs were probably archived\nAND start_time > '2018-03-28'\nGROUP BY 'average-time', UNIX_TIMESTAMP(start_time) DIV 86400\nORDER BY time_sec asc\n\n\n\n",
           "refId": "A"
+        },
+        {
+          "alias": "",
+          "format": "time_series",
+          "rawSql": "SELECT\n  min(UNIX_TIMESTAMP(start_time)) as time_sec,\n  count(*) as value,\n  'number-runs' as metric\nFROM run_metric\nWHERE (result = 'SUCCESS' or result = 'FAILURE' or 'ABORTED')\nAND is_pull_request = 1\nAND total_tests > 0\nAND pipeline_name IN ($pipeline_name)\n-- not reliable before because runs were probably archived\nAND start_time > '2018-03-28'\nGROUP BY 'average-time', UNIX_TIMESTAMP(start_time) DIV 86400\nORDER BY time_sec asc",
+          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Pull request - duration of the run",
+      "title": "Pull request - average duration and number of run per day",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -208,100 +223,15 @@
           "label": "Duration",
           "logBase": 1,
           "max": "18000",
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
-          "format": "short",
+          "format": "none",
           "label": "",
           "logBase": 1,
           "max": null,
-          "min": null,
-          "show": true
-        }
-      ]
-    },
-    {
-      "aliasColors": {
-        "number-runs": "#ef843c"
-      },
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_MYSQL_CI METRICS}",
-      "description": "It represents the number of runs (nightly build excluded) having at least one test executed.\n\n\nFor example, a run with a failing \"composer\" or a run aborted by the user are not taken in account.",
-      "fill": 1,
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 22
-      },
-      "id": 6,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "alias": "",
-          "format": "time_series",
-          "hide": false,
-          "rawSql": "SELECT\n  min(UNIX_TIMESTAMP(start_time)) as time_sec,\n  count(*) as value,\n  'number-runs' as metric\nFROM run_metric\nWHERE (result = 'SUCCESS' or result = 'FAILURE' or 'ABORTED')\nAND is_pull_request = 1\nAND total_tests > 0\nAND pipeline_name IN ($pipeline_name)\nGROUP BY 'average-time', UNIX_TIMESTAMP(start_time) DIV 86400\nORDER BY time_sec asc",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Pull requests - Number of runs per day",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transparent": false,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": "Number of runs",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "decimals": null,
-          "format": "short",
-          "label": "",
-          "logBase": 1,
-          "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         }
       ]
@@ -336,8 +266,8 @@
     ]
   },
   "time": {
-    "from": "2018-01-23T10:23:42.572Z",
-    "to": "2018-04-03T19:41:47.671Z"
+    "from": "now-30d",
+    "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -359,5 +289,5 @@
   "timezone": "",
   "title": "Run dashboard",
   "uid": "w_2qXSimk",
-  "version": 4
+  "version": 7
 }

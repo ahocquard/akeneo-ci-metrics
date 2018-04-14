@@ -14,7 +14,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "5.0.3"
+      "version": "5.0.4"
     },
     {
       "type": "datasource",
@@ -53,7 +53,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1522789377290,
+  "iteration": 1523698997207,
   "links": [],
   "panels": [
     {
@@ -283,7 +283,7 @@
           "alias": "",
           "format": "table",
           "hide": false,
-          "rawSql": "SELECT COUNT(*)\nFROM test_metric\nWHERE\n  pipeline_name = \"$pipeline_name\"\n  AND branch_name = \"$branch_name\"\n  AND run_id = \"$run_id\"\n  AND type IN ($type);",
+          "rawSql": "SELECT COUNT(*)\nFROM test_metric\nWHERE\n  pipeline_name = \"$pipeline_name\"\n  AND branch_name = \"$branch_name\"\n  AND run_id = \"$run_id\"\n  AND type in ($type);",
           "refId": "A"
         }
       ],
@@ -574,5 +574,5 @@
   "timezone": "",
   "title": "Test dashboard",
   "uid": "8OTBzmmmz",
-  "version": 13
+  "version": 2
 }
