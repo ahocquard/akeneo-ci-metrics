@@ -46,14 +46,14 @@ class JenkinsHttpApiTestRepositorySpec extends ObjectBehavior
          ])->willReturn($firstPageResponse);
         $client->request('GET', 'pim-community-dev/branches/PR-7845/runs/1/tests',[
             'query' => [
-                'start' => 100,
+                'start' => 10000,
                 'limit' => 10000,
                 'tree' => 'duration,name'
             ]
         ])->willReturn($secondPageResponse);
         $client->request('GET', 'pim-community-dev/branches/PR-7845/runs/1/tests',[
             'query' => [
-                'start' => 200,
+                'start' => 20000,
                 'limit' => 10000,
                 'tree' => 'duration,name'
             ]
@@ -100,7 +100,7 @@ class JenkinsHttpApiTestRepositorySpec extends ObjectBehavior
             76.45
         );
 
-        $this->listTestsFrom($run) ->shouldBeLike([$test1, $test2]);
+        $this->listTestsFrom($run)->shouldBeLike([$test1, $test2]);
     }
 
     private function firstPage(): string

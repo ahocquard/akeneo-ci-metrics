@@ -13,6 +13,7 @@ use App\Model\Jenkins\Pipeline\Pipeline;
 use App\Model\Jenkins\Pipeline\PipelineName;
 use App\Model\Jenkins\Run\ListableRunRepository;
 use App\Model\Jenkins\Run\Run;
+use App\Model\Jenkins\Run\RunId;
 use App\Model\Jenkins\Run\RunRepository;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
@@ -70,6 +71,10 @@ class ImportRunMetricsHandlerSpec extends ObjectBehavior
         $ceRun2->isRunFinished()->willReturn(true);
         $eeRun1->isRunFinished()->willReturn(true);
 
+        $ceRun1->id()->willReturn(new RunId('ce_run_1'));
+        $ceRun2->id()->willReturn(new RunId('ce_run_2'));
+        $eeRun1->id()->willReturn(new RunId('ee_run_1'));
+
         $saveableRunRepository->hasRun($ceRun1)->willReturn(false);
         $saveableRunRepository->hasRun($ceRun2)->willReturn(false);
         $saveableRunRepository->hasRun($eeRun1)->willReturn(false);
@@ -106,6 +111,9 @@ class ImportRunMetricsHandlerSpec extends ObjectBehavior
         $ceRun1->isRunFinished()->willReturn(true);
         $ceRun2->isRunFinished()->willReturn(false);
 
+        $ceRun1->id()->willReturn(new RunId('ce_run_1'));
+        $ceRun2->id()->willReturn(new RunId('ce_run_2'));
+
         $saveableRunRepository->hasRun($ceRun1)->willReturn(false);
         $saveableRunRepository->hasRun($ceRun2)->willReturn(false);
 
@@ -136,6 +144,9 @@ class ImportRunMetricsHandlerSpec extends ObjectBehavior
 
         $ceRun1->isRunFinished()->willReturn(true);
         $ceRun2->isRunFinished()->willReturn(true);
+
+        $ceRun1->id()->willReturn(new RunId('ce_run_1'));
+        $ceRun2->id()->willReturn(new RunId('ce_run_2'));
 
         $saveableRunRepository->hasRun($ceRun1)->willReturn(false);
         $saveableRunRepository->hasRun($ceRun2)->willReturn(true);
