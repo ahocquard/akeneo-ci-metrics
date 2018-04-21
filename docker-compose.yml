@@ -1,4 +1,4 @@
-version: '1.0'
+version: '3.3'
 
 services:
     mysql:
@@ -11,21 +11,21 @@ services:
       volumes:
         - mysql:/var/lib/mysql
       ports:
-        - '3306:3306'
+        - '3312:3306'
       networks:
         - akeneo
 
-    mysql-test:
-      image: mysql:8.0
-      environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_USER: user
-        MYSQL_PASSWORD: password
-        MYSQL_DATABASE: akeneo_ci_metrics
-      ports:
-        - '3307:3306'
-      networks:
-        - akeneo-test
+#    mysql-test:
+#      image: mysql:8.0
+#      environment:
+#        MYSQL_ROOT_PASSWORD: root
+#        MYSQL_USER: user
+#        MYSQL_PASSWORD: password
+#        MYSQL_DATABASE: akeneo_ci_metrics
+#      ports:
+#        - '3307:3306'
+#      networks:
+#        - akeneo-test
 
     grafana:
         image: grafana/grafana:latest
