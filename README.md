@@ -51,8 +51,7 @@ Do note that you can use `.env.dist` as well instead of exporting variables when
 - Create the tables in the Mysql database.
 
 ```
-$ export APP_ENV=prod && bin/console akeneo:import:test-metrics
-$ export APP_ENV=test && bin/console akeneo:import:test-metrics
+$ export APP_ENV=test && bin/console akeneo:install-database
 ```
 
 ## Importing metrics data
