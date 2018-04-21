@@ -42,10 +42,11 @@ class ImportRunMetricsHandler
     {
         $this->logger->info('Starting to import run metrics.');
         foreach ($command->pipelineNames as $pipelineName) {
+
+            $this->logger->info(sprintf('Starting to import pipeline "%s".', $pipelineName->value()));
             $pipeline = $this->pipelineRepository->getPipeline($pipelineName);
 
             foreach ($pipeline->branches() as $branch) {
-
                 $runsToImport = [];
                 $runs = $this->listableRunRepository->listRunsFrom($branch);
                 $this->logger->debug(sprintf('List runs from branch "%s".', $branch->name()->value()));
@@ -53,6 +54,8 @@ class ImportRunMetricsHandler
                     if ($run->isRunFinished() && !$this->saveableRunRepository->hasRun($run)) {
                         $this->logger->debug(sprintf('Importing run "%s".', $run->id()->value()));
                         $runsToImport[] = $run;
+                    } else {
+                        $this->logger->debug(sprintf('Run "%s" already imported or not finished.', $run->id()->value()));
                     }
                 }
 
