@@ -34,7 +34,9 @@ class JenkinsHttpApiRunRepositorySpec extends ObjectBehavior
         ResponseInterface $thirdPageResponse,
         StreamInterface $firstPageStream,
         StreamInterface $secondPageStream,
-        StreamInterface $thirdPageStream
+        StreamInterface $thirdPageStream,
+        ResponseInterface $summaryResponse,
+        StreamInterface $summaryStream
     ) {
         $client->request('GET', 'pim-community-dev/branches/PR-7845/runs',[
             'query' => [
@@ -65,6 +67,11 @@ class JenkinsHttpApiRunRepositorySpec extends ObjectBehavior
         $secondPageStream->getContents()->willReturn($this->secondPage());
         $thirdPageStream->getContents()->willReturn('[]');
 
+        $client->request('GET', 'pim-community-dev/branches/PR-7845/runs/1/blueTestSummary')->willReturn($summaryResponse);
+        $client->request('GET', 'pim-community-dev/branches/PR-7845/runs/2/blueTestSummary')->willReturn($summaryResponse);
+        $summaryResponse->getBody()->willReturn($summaryStream);
+        $summaryStream->getContents()->willReturn($this->summary());
+
         $run1 = new Run(
             new PipelineName('pim-community-dev'),
             new BranchName('PR-7845'),
@@ -75,10 +82,10 @@ class JenkinsHttpApiRunRepositorySpec extends ObjectBehavior
             \DateTime::createFromFormat('Y-m-d\TH:i:s.uO', '2018-03-21T09:10:04.431+0000'),
             \DateTime::createFromFormat('Y-m-d\TH:i:s.uO', '2018-03-21T09:10:04.445+0000'),
             \DateTime::createFromFormat('Y-m-d\TH:i:s.uO', '2018-03-26T09:10:36.345+0000'),
-            -1,
-            -1,
-            -1,
-            -1
+            1,
+            0,
+            6127,
+            6128
         );
 
         $run2 = new Run(
@@ -91,10 +98,10 @@ class JenkinsHttpApiRunRepositorySpec extends ObjectBehavior
             \DateTime::createFromFormat('Y-m-d\TH:i:s.uO', '2018-03-21T11:15:21.639+0000'),
             \DateTime::createFromFormat('Y-m-d\TH:i:s.uO', '2018-03-21T11:15:21.660+0000'),
             \DateTime::createFromFormat('Y-m-d\TH:i:s.uO', '2018-03-26T11:16:32.528+0000'),
-            -1,
-            -1,
-            -1,
-            -1
+            1,
+            0,
+            6127,
+            6128
         );
 
         $this->listRunsFrom(
@@ -141,4 +148,27 @@ JSON;
             ]
 JSON;
     }
+
+    private function summary(): string
+    {
+        return <<<'JSON'
+            {
+              "_class" : "io.jenkins.blueocean.rest.model.BlueTestSummary",
+              "_links" : {
+                "self" : {
+                  "_class" : "io.jenkins.blueocean.rest.hal.Link",
+                  "href" : "/blue/rest/organizations/jenkins/pipelines/akeneo/pipelines/pim-community-dev/branches/PR-7845/runs/1/blueTestSummary/"
+                }
+              },
+              "existingFailed" : 0,
+              "failed" : 1,
+              "fixed" : 0,
+              "passed" : 6127,
+              "regressions" : 1,
+              "skipped" : 0,
+              "total" : 6128
+            }
+JSON;
+    }
+
 }

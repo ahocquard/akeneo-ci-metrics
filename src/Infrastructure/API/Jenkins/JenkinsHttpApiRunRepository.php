@@ -65,6 +65,8 @@ class JenkinsHttpApiRunRepository implements ListableRunRepository
 
             $rawDataRuns = json_decode($body, true);
             foreach ($rawDataRuns as $rawDataRun) {
+                $summary = $this->summaryForRun($branch, new RunId($rawDataRun['id']));
+
                 $run = new Run(
                     $branch->pipelineName(),
                     $branch->name(),
@@ -75,10 +77,10 @@ class JenkinsHttpApiRunRepository implements ListableRunRepository
                     null !== $rawDataRun['enQueueTime'] ? \DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $rawDataRun['enQueueTime']) : null,
                     null !== $rawDataRun['startTime'] ? \DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $rawDataRun['startTime']) : null,
                     null !== $rawDataRun['endTime'] ? \DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $rawDataRun['endTime']) : null,
-                    $rawDataRun['testSummary']['failed'] ?? -1,
-                    $rawDataRun['testSummary']['skipped'] ?? -1,
-                    $rawDataRun['testSummary']['passed'] ?? -1,
-                    $rawDataRun['testSummary']['total'] ?? -1
+                    $summary['failed'] ?? -1,
+                    $summary['skipped'] ?? -1,
+                    $summary['passed'] ?? -1,
+                    $summary['total'] ?? -1
                 );
 
                 $runs[] = $run;
@@ -87,5 +89,32 @@ class JenkinsHttpApiRunRepository implements ListableRunRepository
         } while (!empty($rawDataRuns));
 
         return $runs;
+    }
+
+    private function summaryForRun(Branch $branch, RunId $runId)
+    {
+        $data = [
+            'failed' => -1,
+            'skipped' => -1,
+            'passed' => -1,
+            'total' => -1
+        ];
+
+        try {
+            $response = $this->client->request(
+                'GET',
+                sprintf(
+                    '%s/branches/%s/runs/%s/blueTestSummary',
+                    $branch->pipelineName()->value(), $branch->name()->value(), $runId->value()
+                )
+            );
+
+            $body = $response->getBody()->getContents();
+            $rawData = json_decode($body, true);
+            $data = array_merge($data, $rawData);
+        } catch (\Exception $e) {
+        }
+
+        return $data;
     }
 }

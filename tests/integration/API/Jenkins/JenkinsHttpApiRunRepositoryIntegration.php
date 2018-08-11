@@ -41,6 +41,20 @@ class JenkinsHttpApiRunRepositoryIntegration extends KernelTestCase
                 new Response('[]')
             )
         );
+
+        $this->server->setResponseOfPath(
+            '/blue/rest/organizations/jenkins/pipelines/akeneo/pim-community-dev/branches/master/runs/1/blueTestSummary',
+            new ResponseStack(
+                new Response($this->getFirstSummary())
+            )
+        );
+
+        $this->server->setResponseOfPath(
+            '/blue/rest/organizations/jenkins/pipelines/akeneo/pim-community-dev/branches/master/runs/2/blueTestSummary',
+            new ResponseStack(
+                new Response($this->getSecondSummary())
+            )
+        );
     }
 
     protected function tearDown() {
@@ -126,15 +140,53 @@ class JenkinsHttpApiRunRepositoryIntegration extends KernelTestCase
                     "id" : "1",
                     "result" : "SUCCESS",
                     "startTime" : "2018-03-24T03:40:02.522+0000",
-                    "state" : "FINISHED",
-                    "testSummary" : {
-                        "failed" : 0,
-                        "passed" : 8174,
-                        "skipped" : 0,
-                        "total" : 8174
-                    }
+                    "state" : "FINISHED"
                 }
             ]
+JSON;
+    }
+
+    private function getFirstSummary(): string
+    {
+        return <<<JSON
+            {
+              "_class" : "io.jenkins.blueocean.rest.model.BlueTestSummary",
+              "_links" : {
+                "self" : {
+                  "_class" : "io.jenkins.blueocean.rest.hal.Link",
+                  "href" : "/blue/rest/organizations/jenkins/pipelines/akeneo/pipelines/pim-community-dev/branches/master/runs/1/blueTestSummary/"
+                }
+              },
+              "existingFailed" : 0,
+              "failed" : 0,
+              "fixed" : 0,
+              "passed" : 8174,
+              "regressions" : 0,
+              "skipped" : 0,
+              "total" : 8174
+            }
+JSON;
+    }
+
+    private function getSecondSummary(): string
+    {
+        return <<<JSON
+            {
+              "_class" : "io.jenkins.blueocean.rest.model.BlueTestSummary",
+              "_links" : {
+                "self" : {
+                  "_class" : "io.jenkins.blueocean.rest.hal.Link",
+                  "href" : "/blue/rest/organizations/jenkins/pipelines/akeneo/pipelines/pim-community-dev/branches/master/runs/2/blueTestSummary/"
+                }
+              },
+              "existingFailed" : 0,
+              "failed" : 1,
+              "fixed" : 0,
+              "passed" : 8173,
+              "regressions" : 0,
+              "skipped" : 0,
+              "total" : 8174
+            }
 JSON;
     }
 }
